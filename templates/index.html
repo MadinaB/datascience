@@ -15,9 +15,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-8">
-                 {% for group in groups %}
-                 <h4>group</h4>
-                  {% endfor %}
+                 
             </div>
             <div class="col-sm-4">
                 <form action="{{ url_for('show_chart') }}" method="post">
@@ -30,7 +28,10 @@
                 
                 <br>
                 {% for gender in genders %}
-                    <p><input type="checkbox" name={{gender}}>   {{gender}} </input></p>
+                    <p>
+                        <input type="checkbox" id="{{gender}}" name="genders" value="{{gender}}">
+                        <label for="{{gender}}">{{gender}}</label>
+                    </p>
                 {% endfor %}
                 
                 <br>
@@ -38,10 +39,15 @@
                 <h4>By race:</h4>
                 <br>
                 {% for race in races %}
-                        <p><input type="checkbox" name={{race}}>   {{race}} </input></p>
+                    <p>
+                        <input type="checkbox" id="{{race}}" name="races" value="{{race}}">
+                        <label for="{{race}}">{{race}}</label>
+                    </p>
                 {% endfor %}
                 
                 <br>
+                
+                
                 <input type="submit" class="btn btn-default" >
                 </form>
                 

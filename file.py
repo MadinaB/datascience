@@ -122,7 +122,7 @@ def show_genders_text(genders):
 def show_races_text(races):
     for race in races:
         for type_of_friends in races[race]:
-             'There are ', races[race][type_of_friends],' ',race, ' people who have ', type_of_friends,' friends.'
+             print 'There are ', races[race][type_of_friends],' ',race, ' people who have ', type_of_friends,' friends.'
 
 
 def get_friends_total():
@@ -153,7 +153,7 @@ def get_friends_total():
                     friends[type_of_race][type_of_gender] = {}
                 if not has_friends in friends[type_of_race][type_of_gender]:
                     friends[type_of_race][type_of_gender][has_friends] =0
-                print type_of_race, has_friends, type_of_gender
+                        #print type_of_race, has_friends, type_of_gender
                 friends[type_of_race][type_of_gender][has_friends] +=1
         return friends
 
@@ -163,17 +163,17 @@ def main():
 
 @app.route('/show_chart', methods = ['POST'])
 def show_chart():
-    for race in races:
-        for gender in genders:
-            race_marked = request.form.get(race)
-            gender_marked = request.form.get(gender)
-            print race,': ', race_marked, gender,' : ',  gender_marked
+    selected_genders = request.form.getlist("genders")
+    selected_races = request.form.getlist("races")
+    groups = {}
+    print selected_genders, selected_races
     return render_template("index.html", genders=genders,races=races, friends=friends,groups=groups )
 
 if __name__ == '__main__':
     friends = get_friends_total()
     genders = get_genders_list()
     races = get_races_list()
+   
     groups = {}
     app.secret_key = 'some_data'
     app.debug = True
