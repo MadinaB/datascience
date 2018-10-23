@@ -166,6 +166,11 @@ def show_chart():
     selected_genders = request.form.getlist("genders")
     selected_races = request.form.getlist("races")
     groups = {}
+    for race in selected_races:
+        if not race in groups:
+            groups[race]=[]
+        for gender in selected_genders:
+            groups[race]+=gender
     print selected_genders, selected_races
     return render_template("index.html", genders=genders,races=races, friends=friends,groups=groups )
 
