@@ -1,6 +1,7 @@
 import csv
 import matplotlib
-from flask import Flask
+import json
+from flask import Flask, request, render_template
 app = Flask(__name__)
 
 
@@ -83,21 +84,31 @@ def show_genders_text(genders):
 def show_races_text(races):
     for race in races:
         for type_of_friends in races[race]:
-            print 'There are ', races[race][type_of_friends],' ',race, ' people who have ', type_of_friends,' friends.'
+             'There are ', races[race][type_of_friends],' ',race, ' people who have ', type_of_friends,' friends.'
 
 
 
 
 @app.route('/')
-def hello_world():
+def main():
     friends = get_friends()
     genders = get_genders()
     races = get_races()
+    groups ={}
     
     show_genders_text(genders)
     show_races_text(races)
-    return 'Hello, World!'
+    dic ={'a': 10, 'b':20}
+    return render_template("index.html", genders=genders,races=races, groups=groups )
 
+@app.route('/handle_data', methods=['POST'])
+def handle_data(genders,races):
+    projectpath = request.form['projectFilepath']
+    
+    return render_template("index.html", genders=genders,races=races, groups=groups )
 
-
+if __name__ == '__main__':
+    app.secret_key = 'some_data'
+    app.debug = True
+    app.run(host='0.0.0.0', port=8000)
 
