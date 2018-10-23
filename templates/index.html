@@ -59,18 +59,23 @@
                         </script>
                     <!-- HTML -->
                     <div id="chartdiv"></div>
+                     <div class="jumbotron text-center">
+                    {% for group in groups %}
+                    {% for key in group %}
+                    <p>{{ group[key] }} {{key}}</p>
+                    {% endfor %}
+                    {% endfor %}
+                    </div>
                     
                 </div>
                 <div class="col-sm-4">
-                    <form action="{{ url_for('show_chart') }}" method="post">
-                        
+                    <form action="{{ url_for('show_chart') }}" method="post" >
+        
                         <h3>Show friends of these groups: </h3>
-                        
-                        <br>
+
                         
                         <h4>By gender:</h4>
                         
-                        <br>
                         {% for gender in genders %}
                             {% set gender_str = gender %}
                             {% if gender_str == ' ' %}
@@ -82,10 +87,8 @@
                             </p>
                         {% endfor %}
                             
-                        <br>
-                            
                         <h4>By race:</h4>
-                        <br>
+                        
                         {% for race in races %}
                             {% set race_str = race %}
                             {% if race_str == ' ' %}
@@ -96,23 +99,18 @@
                             <label for="{{race}}">{{race_str}}</label>
                             </p>
                         {% endfor %}
-                                
-                        <br>
-                                
+                        
                         <h4>By amount of friends:</h4>
-                        <br>
+                        
                         {% for type_of_friendship in types_of_friendship %}
                             {% set type_of_friendship_str = type_of_friendship %}
                             {% if type_of_friendship_str == ' ' %}
                                 {% set type_of_friendship_str = 'Friends are not defined' %}
                             {% endif  %}
-                            <p><input type="checkbox" id="{{type_of_friendship}}" name="type_of_friendship" value="{{type_of_friendship}}">
-                                <label for="{{type_of_friendship}}">{{type_of_friendship_str}}</label></p>
+                            <p><input type="checkbox" class="form-check-input" id="{{type_of_friendship}}" name="type_of_friendship" value="{{type_of_friendship}}">
+                                <label class="form-check-label" for="{{type_of_friendship}}">{{type_of_friendship_str}}</label></p>
                         {% endfor %}
-                                    
-                        <br>
-                                    
-                                    
+                        
                         <input type="submit" class="btn btn-default" >
                     </form>
                     
