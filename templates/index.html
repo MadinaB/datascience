@@ -72,9 +72,13 @@
                         
                         <br>
                         {% for gender in genders %}
+                            {% set gender_str = gender %}
+                            {% if gender_str == ' ' %}
+                                {% set gender_str = 'Gender not defined' %}
+                            {% endif  %}
                             <p>
                             <input type="checkbox" id="{{gender}}" name="genders" value="{{gender}}">
-                            <label for="{{gender}}">{{gender}}</label>
+                            <label for="{{gender}}">{{gender_str}}</label>
                             </p>
                         {% endfor %}
                             
@@ -83,9 +87,13 @@
                         <h4>By race:</h4>
                         <br>
                         {% for race in races %}
+                            {% set race_str = race %}
+                            {% if race_str == ' ' %}
+                                {% set race_str = 'Race not defined' %}
+                            {% endif  %}
                             <p>
                             <input type="checkbox" id="{{race}}" name="races" value="{{race}}">
-                            <label for="{{race}}">{{race}}</label>
+                            <label for="{{race}}">{{race_str}}</label>
                             </p>
                         {% endfor %}
                                 
@@ -94,8 +102,12 @@
                         <h4>By amount of friends:</h4>
                         <br>
                         {% for type_of_friendship in types_of_friendship %}
-                        
-                            <p><input type="checkbox" id="{{type_of_friendship}}" name="type_of_friendship" value="{{type_of_friendship}}"><label for="{{type_of_friendship}}">{{type_of_friendship}}</label></p>
+                            {% set type_of_friendship_str = type_of_friendship %}
+                            {% if type_of_friendship_str == ' ' %}
+                                {% set type_of_friendship_str = 'Friends are not defined' %}
+                            {% endif  %}
+                            <p><input type="checkbox" id="{{type_of_friendship}}" name="type_of_friendship" value="{{type_of_friendship}}">
+                                <label for="{{type_of_friendship}}">{{type_of_friendship_str}}</label></p>
                         {% endfor %}
                                     
                         <br>

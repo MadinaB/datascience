@@ -333,6 +333,7 @@ def get_groups(selected_races,selected_genders,selected_friendship):
                             if g:
                                 key+= gender_str
                                 key+= ' '
+                            key+= "people with "
                             if f:
                                 key+= type_of_friendship_str
                                 key+= ' '
