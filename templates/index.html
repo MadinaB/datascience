@@ -32,28 +32,31 @@
                 </style>
                 <script>
                     var chart_values = []
-                    chart_values.push({"country": "Lithuania","litres": 501.9})
                     {% for race in groups %}
                     {% if race in friends %}
                     {% for gender in groups[race] %}
                     {% if gender in friends[race] %}
                     {% for type_of_friends in types_of_friendship %}
                     {% if type_of_friends in friends[race][gender] %}
+                    var amount ={{ friends[race][gender][type_of_friends] }}
+                    {% if type_of_friends == ' ' %}{% set type_of_friends = 'not defined' %}{% endif %}
+                    {% set value =race+", "+ gender+" and has " + type_of_friends + " friends" %}
+                    var person_type = "{{value}}"
+                    chart_values.push({"person_type": person_type,"amount": amount})
                     
-                    chart_values.push({"country": "Lithuania","litres": {{ friends[race][gender][type_of_friends] }}})
                     {% endif%}
                     {% endfor %}
                     {% endif%}
                     {% endfor %}
                     {% endif%}
                     {% endfor %}
-                    alert(JSON.stringify(chart_values))
+
                     var chart = AmCharts.makeChart( "chartdiv", {
                                                    "type": "pie",
                                                    "theme": "light",
                                                    "dataProvider": chart_values,
-                                                   "valueField": "litres",
-                                                   "titleField": "country",
+                                                   "valueField": "amount",
+                                                   "titleField": "person_type",
                                                    "balloon":{
                                                    "fixedPosition":true
                                                    },
@@ -64,7 +67,7 @@
                     </script>
                  <!-- HTML -->
                 <div id="chartdiv"></div>
-                hello
+                
             </div>
             <div class="col-sm-4">
                 <form action="{{ url_for('show_chart') }}" method="post">
