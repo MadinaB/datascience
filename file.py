@@ -75,6 +75,44 @@ def get_races():
                 races[type_of_race][has_friends] +=1
         return races
 
+def get_races_list():
+    with open('Somerville_High_School_YRBS_Raw_Data_2002-2016.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = -1
+        races = set()
+        races_index = 0
+        for row in csv_reader:
+            if line_count == -1:
+                for index, quality in enumerate(row):
+                    if quality =='race':
+                        races_index = index
+                    line_count += 1
+            else:
+                type_of_race = row[races_index]
+                if not type_of_race in races:
+                    races.add(type_of_race)
+        races = sorted(races, key = len, reverse=True)
+        return races
+
+def get_genders_list():
+    with open('Somerville_High_School_YRBS_Raw_Data_2002-2016.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = -1
+        genders = set()
+        genders_index = 0
+        for row in csv_reader:
+            if line_count == -1:
+                for index, quality in enumerate(row):
+                    if quality =='gender':
+                        genders_index = index
+                    line_count += 1
+            else:
+                type_of_gender = row[genders_index]
+                if not type_of_gender in genders:
+                    genders.add(type_of_gender)
+        genders = sorted(genders, key = len, reverse=True)
+        return genders
+
 
 def show_genders_text(genders):
     for gender in genders:
@@ -87,27 +125,56 @@ def show_races_text(races):
              'There are ', races[race][type_of_friends],' ',race, ' people who have ', type_of_friends,' friends.'
 
 
-
+def get_friends_total():
+    with open('Somerville_High_School_YRBS_Raw_Data_2002-2016.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = -1
+        friends = {}
+        genders_index = 0
+        races_index = 0
+        friends_index = 0
+        for row in csv_reader:
+            if line_count == -1:
+                for index, quality in enumerate(row):
+                    if quality =='race':
+                        races_index = index
+                    if quality =='gender':
+                        genders_index = index
+                    if quality =='friends':
+                        friends_index = index
+                    line_count += 1
+            else:
+                type_of_race = row[races_index]
+                type_of_gender = row[genders_index]
+                has_friends = row[friends_index]
+                if not type_of_race in friends:
+                    friends[type_of_race] = {}
+                if not type_of_gender in friends[type_of_race]:
+                    friends[type_of_race][type_of_gender] = {}
+                if not has_friends in friends[type_of_race][type_of_gender]:
+                    friends[type_of_race][type_of_gender][has_friends] =0
+                print type_of_race, has_friends, type_of_gender
+                friends[type_of_race][type_of_gender][has_friends] +=1
+        return friends
 
 @app.route('/')
 def main():
-    friends = get_friends()
-    genders = get_genders()
-    races = get_races()
-    groups ={}
-    
-    show_genders_text(genders)
-    show_races_text(races)
-    dic ={'a': 10, 'b':20}
-    return render_template("index.html", genders=genders,races=races, groups=groups )
+    return render_template("index.html", genders=genders,races=races,friends=friends, groups=groups )
 
-@app.route('/handle_data', methods=['POST'])
-def handle_data(genders,races):
-    projectpath = request.form['projectFilepath']
-    
-    return render_template("index.html", genders=genders,races=races, groups=groups )
+@app.route('/show_chart', methods = ['POST'])
+def show_chart():
+    for race in races:
+        for gender in genders:
+            race_marked = request.form.get(race)
+            gender_marked = request.form.get(gender)
+            print race,': ', race_marked, gender,' : ',  gender_marked
+    return render_template("index.html", genders=genders,races=races, friends=friends,groups=groups )
 
 if __name__ == '__main__':
+    friends = get_friends_total()
+    genders = get_genders_list()
+    races = get_races_list()
+    groups = {}
     app.secret_key = 'some_data'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)
