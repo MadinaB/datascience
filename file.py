@@ -178,17 +178,66 @@ def get_friends_total():
 def main():
     return render_template("index.html",types_of_friendship=types_of_friendship, genders=genders,races=races,friends=friends, groups=groups )
 
+def get_groups_with_none():
+    groups = []
+    group = {}
+    for type_of_friendship in types_of_friendship:
+        if not type_of_friendship in group:
+            type_of_friendship_str = type_of_friendship
+            if type_of_friendship == ' ':
+                type_of_friendship_str = 'not defined'
+            group[type_of_friendship_str] = 0
+        for race in races:
+            if race in friends:
+                for gender in genders:
+                    if gender in friends[race]:
+                        if type_of_friendship in friends[race][gender]:
+                            type_of_friendship_str = type_of_friendship
+                            if type_of_friendship == ' ':
+                                type_of_friendship_str = 'not defined'
+                            group[type_of_friendship_str]+=friends[race][gender][type_of_friendship]
+    groups.append(group)
+    return groups;
+
+def get_groups_races_genders(selected_races,selected_genders):
+    groups = []
+    for race in selected_races:
+        if race in friends:
+            group = {}
+            for gender in selected_genders:
+                if gender in friends[race]:
+                    for type_of_friendship in types_of_friendship:
+                        if type_of_friendship in friends[race][gender]:
+                            gender_str = gender
+                            race_str = race
+                            type_of_friendship_str = type_of_friendship
+                            if type_of_friendship == ' ':
+                                type_of_friendship_str = 'not defined'
+                            if race == ' ':
+                                race_str = 'not defined'
+                            if race == ' ':
+                                gender_str = 'not defined'
+                            key = race_str+", "+ gender_str+" and has " + type_of_friendship_str + " friends"
+                            value = friends[race][gender][type_of_friendship]
+                            group[key]=value
+            groups.append(group)
+    return groups;
+
+
+def get_groups(selected_races,selected_genders):
+    groups = []
+    if len(selected_races)!=0 and len(selected_genders)!=0:
+        groups = get_groups_races_genders(selected_races,selected_genders)
+    elif len(selected_races) ==0 and len(selected_genders)==0:
+         groups = get_groups_with_none()
+    return groups;
+
+
 @app.route('/show_chart', methods = ['POST'])
 def show_chart():
     selected_genders = request.form.getlist("genders")
     selected_races = request.form.getlist("races")
-    groups = {}
-    for race in selected_races:
-        if not race in groups:
-            groups[race]=[]
-        for gender in selected_genders:
-            groups[race].append(gender)
-    print selected_genders, selected_races
+    groups = get_groups(selected_races,selected_genders)
     return render_template("index.html", types_of_friendship=types_of_friendship, genders=genders,races=races, friends=friends,groups=groups )
 
 if __name__ == '__main__':
@@ -196,8 +245,7 @@ if __name__ == '__main__':
     friends = get_friends_total()
     genders = get_genders_list()
     races = get_races_list()
-   
-    groups = {}
+    groups = get_groups([],[])
     app.secret_key = 'some_data'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)

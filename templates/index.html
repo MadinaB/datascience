@@ -32,23 +32,13 @@
                 </style>
                 <script>
                     var chart_values = []
-                    {% for race in groups %}
-                    {% if race in friends %}
-                    {% for gender in groups[race] %}
-                    {% if gender in friends[race] %}
-                    {% for type_of_friends in types_of_friendship %}
-                    {% if type_of_friends in friends[race][gender] %}
-                    var amount ={{ friends[race][gender][type_of_friends] }}
-                    {% if type_of_friends == ' ' %}{% set type_of_friends = 'not defined' %}{% endif %}
-                    {% set value =race+", "+ gender+" and has " + type_of_friends + " friends" %}
-                    var person_type = "{{value}}"
+                    {% for group in groups %}
+                    {% for key in group %}
+                        var amount ={{ group[key] }}
+                        var person_type = "{{key}}"
                     chart_values.push({"person_type": person_type,"amount": amount})
-                    
-                    {% endif%}
+
                     {% endfor %}
-                    {% endif%}
-                    {% endfor %}
-                    {% endif%}
                     {% endfor %}
 
                     var chart = AmCharts.makeChart( "chartdiv", {
