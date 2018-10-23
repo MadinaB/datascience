@@ -124,6 +124,23 @@ def show_races_text(races):
         for type_of_friends in races[race]:
              print 'There are ', races[race][type_of_friends],' ',race, ' people who have ', type_of_friends,' friends.'
 
+def get_types_of_friendship():
+    with open('Somerville_High_School_YRBS_Raw_Data_2002-2016.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = -1
+        friends = []
+        friends_index = 0
+        for row in csv_reader:
+            if line_count == -1:
+                for index, quality in enumerate(row):
+                    if quality =='friends':
+                        friends_index = index
+                        line_count += 1
+            else:
+                type_of_friends = row[friends_index]
+                if not type_of_friends in friends:
+                    friends.append(type_of_friends)
+    return friends
 
 def get_friends_total():
     with open('Somerville_High_School_YRBS_Raw_Data_2002-2016.csv') as csv_file:
@@ -159,7 +176,7 @@ def get_friends_total():
 
 @app.route('/')
 def main():
-    return render_template("index.html", genders=genders,races=races,friends=friends, groups=groups )
+    return render_template("index.html",types_of_friendship=types_of_friendship, genders=genders,races=races,friends=friends, groups=groups )
 
 @app.route('/show_chart', methods = ['POST'])
 def show_chart():
@@ -170,11 +187,12 @@ def show_chart():
         if not race in groups:
             groups[race]=[]
         for gender in selected_genders:
-            groups[race]+=gender
+            groups[race].append(gender)
     print selected_genders, selected_races
-    return render_template("index.html", genders=genders,races=races, friends=friends,groups=groups )
+    return render_template("index.html", types_of_friendship=types_of_friendship, genders=genders,races=races, friends=friends,groups=groups )
 
 if __name__ == '__main__':
+    types_of_friendship = get_types_of_friendship()
     friends = get_friends_total()
     genders = get_genders_list()
     races = get_races_list()

@@ -24,8 +24,6 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-8">
-                
-                <!-- Chart code -->
                 <style>
                     #chartdiv {
                         width: 100%;
@@ -33,37 +31,27 @@
                     }
                 </style>
                 <script>
+                    var chart_values = []
+                    chart_values.push({"country": "Lithuania","litres": 501.9})
+                    {% for race in groups %}
+                    {% if race in friends %}
+                    {% for gender in groups[race] %}
+                    {% if gender in friends[race] %}
+                    {% for type_of_friends in types_of_friendship %}
+                    {% if type_of_friends in friends[race][gender] %}
+                    
+                    chart_values.push({"country": "Lithuania","litres": {{ friends[race][gender][type_of_friends] }}})
+                    {% endif%}
+                    {% endfor %}
+                    {% endif%}
+                    {% endfor %}
+                    {% endif%}
+                    {% endfor %}
+                    alert(JSON.stringify(chart_values))
                     var chart = AmCharts.makeChart( "chartdiv", {
                                                    "type": "pie",
                                                    "theme": "light",
-                                                   "dataProvider": [ {
-                                                                    "country": "Lithuania",
-                                                                    "litres": 501.9
-                                                                    }, {
-                                                                    "country": "Czech Republic",
-                                                                    "litres": 301.9
-                                                                    }, {
-                                                                    "country": "Ireland",
-                                                                    "litres": 201.1
-                                                                    }, {
-                                                                    "country": "Germany",
-                                                                    "litres": 165.8
-                                                                    }, {
-                                                                    "country": "Australia",
-                                                                    "litres": 139.9
-                                                                    }, {
-                                                                    "country": "Austria",
-                                                                    "litres": 128.3
-                                                                    }, {
-                                                                    "country": "UK",
-                                                                    "litres": 99
-                                                                    }, {
-                                                                    "country": "Belgium",
-                                                                    "litres": 60
-                                                                    }, {
-                                                                    "country": "The Netherlands",
-                                                                    "litres": 50
-                                                                    } ],
+                                                   "dataProvider": chart_values,
                                                    "valueField": "litres",
                                                    "titleField": "country",
                                                    "balloon":{
