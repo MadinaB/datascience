@@ -1,4 +1,4 @@
-# outreachy-datascience
+# Datascience
  School-YRBS: Friends. Issue 11 solution by madinab
 
 
